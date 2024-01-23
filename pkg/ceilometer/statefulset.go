@@ -41,7 +41,6 @@ func StatefulSet(
 	configHash string,
 	labels map[string]string,
 ) (*appsv1.StatefulSet, error) {
-	runAsUser := int64(0)
 
 	// TO-DO Probes
 	livenessProbe := &corev1.Probe{
@@ -78,6 +77,8 @@ func StatefulSet(
 	envVarsNotification["CONFIG_HASH"] = env.SetValue(configHash)
 
 	var replicas int32 = 1
+	allowPrivilegeEscalation := false
+	runAsNonRoot := true
 
 	centralAgentContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
@@ -89,7 +90,14 @@ func StatefulSet(
 		Name:  "ceilometer-central-agent",
 		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsCentral),
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts: getVolumeMounts("ceilometer-central"),
 	}
@@ -103,7 +111,14 @@ func StatefulSet(
 		Name:  "ceilometer-notification-agent",
 		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsNotification),
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts: getVolumeMounts("ceilometer-notification"),
 	}
@@ -112,7 +127,14 @@ func StatefulSet(
 		Image:           instance.Spec.SgCoreImage,
 		Name:            "sg-core",
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts:   getSgCoreVolumeMounts(),
 		ReadinessProbe: readinessProbe,

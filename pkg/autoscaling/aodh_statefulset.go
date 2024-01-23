@@ -42,7 +42,6 @@ func AodhStatefulSet(
 	configHash string,
 	labels map[string]string,
 ) (*appsv1.StatefulSet, error) {
-	runAsUser := int64(0)
 
 	livenessProbe := &corev1.Probe{
 		// TODO might need tuning
@@ -74,6 +73,8 @@ func AodhStatefulSet(
 	envVarsAodh["CONFIG_HASH"] = env.SetValue(configHash)
 
 	var replicas int32 = 1
+	allowPrivilegeEscalation := false
+	runAsNonRoot := true
 
 	apiContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
@@ -85,7 +86,14 @@ func AodhStatefulSet(
 		Name:  "aodh-api",
 		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts: getVolumeMounts("aodh-api"),
 	}
@@ -100,7 +108,14 @@ func AodhStatefulSet(
 		Name:  "aodh-evaluator",
 		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts: getVolumeMounts("aodh-evaluator"),
 	}
@@ -115,7 +130,14 @@ func AodhStatefulSet(
 		Name:  "aodh-notifier",
 		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts: getVolumeMounts("aodh-notifier"),
 	}
@@ -130,7 +152,14 @@ func AodhStatefulSet(
 		Name:  "aodh-listener",
 		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: &corev1.SecurityContext{
-			RunAsUser: &runAsUser,
+			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+			Capabilities: &corev1.Capabilities{
+				Drop: []corev1.Capability{"ALL"},
+			},
+			RunAsNonRoot: &runAsNonRoot,
+			SeccompProfile: &corev1.SeccompProfile{
+				Type: "RuntimeDefault",
+			},
 		},
 		VolumeMounts: getVolumeMounts("aodh-listener"),
 	}
