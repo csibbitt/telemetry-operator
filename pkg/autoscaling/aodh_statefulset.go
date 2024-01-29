@@ -92,12 +92,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:            args,
-		Image:           instance.Spec.Aodh.APIImage,
-		Name:            "aodh-api",
-		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		Args:  args,
+		Image: instance.Spec.Aodh.APIImage,
+		Name:  "aodh-api",
+		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: securityContext,
-		VolumeMounts:    getVolumeMounts("aodh-api"),
+		VolumeMounts: getVolumeMounts("aodh-api"),
 	}
 
 	evaluatorContainer := corev1.Container{
@@ -105,12 +105,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:            args,
-		Image:           instance.Spec.Aodh.EvaluatorImage,
-		Name:            "aodh-evaluator",
-		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		Args:  args,
+		Image: instance.Spec.Aodh.EvaluatorImage,
+		Name:  "aodh-evaluator",
+		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: securityContext,
-		VolumeMounts:    getVolumeMounts("aodh-evaluator"),
+		VolumeMounts: getVolumeMounts("aodh-evaluator"),
 	}
 
 	notifierContainer := corev1.Container{
@@ -118,12 +118,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:            args,
-		Image:           instance.Spec.Aodh.NotifierImage,
-		Name:            "aodh-notifier",
-		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		Args:  args,
+		Image: instance.Spec.Aodh.NotifierImage,
+		Name:  "aodh-notifier",
+		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: securityContext,
-		VolumeMounts:    getVolumeMounts("aodh-notifier"),
+		VolumeMounts: getVolumeMounts("aodh-notifier"),
 	}
 
 	listenerContainer := corev1.Container{
@@ -131,12 +131,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:            args,
-		Image:           instance.Spec.Aodh.ListenerImage,
-		Name:            "aodh-listener",
-		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		Args:  args,
+		Image: instance.Spec.Aodh.ListenerImage,
+		Name:  "aodh-listener",
+		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
 		SecurityContext: securityContext,
-		VolumeMounts:    getVolumeMounts("aodh-listener"),
+		VolumeMounts: getVolumeMounts("aodh-listener"),
 	}
 
 	pod := corev1.PodTemplateSpec{

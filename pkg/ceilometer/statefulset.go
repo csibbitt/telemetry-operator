@@ -96,33 +96,33 @@ func StatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:            args,
-		Image:           instance.Spec.CentralImage,
-		Name:            "ceilometer-central-agent",
-		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsCentral),
+		Args:  args,
+		Image: instance.Spec.CentralImage,
+		Name:  "ceilometer-central-agent",
+		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsCentral),
 		SecurityContext: securityContext,
-		VolumeMounts:    getVolumeMounts("ceilometer-central"),
+		VolumeMounts: getVolumeMounts("ceilometer-central"),
 	}
 	notificationAgentContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:            args,
-		Image:           instance.Spec.NotificationImage,
-		Name:            "ceilometer-notification-agent",
-		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsNotification),
+		Args:  args,
+		Image: instance.Spec.NotificationImage,
+		Name:  "ceilometer-notification-agent",
+		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsNotification),
 		SecurityContext: securityContext,
-		VolumeMounts:    getVolumeMounts("ceilometer-notification"),
+		VolumeMounts: getVolumeMounts("ceilometer-notification"),
 	}
 	sgCoreContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		Image:           instance.Spec.SgCoreImage,
 		Name:            "sg-core",
 		SecurityContext: securityContext,
-		VolumeMounts:    getSgCoreVolumeMounts(),
-		ReadinessProbe:  readinessProbe,
-		LivenessProbe:   livenessProbe,
+		VolumeMounts:   getSgCoreVolumeMounts(),
+		ReadinessProbe: readinessProbe,
+		LivenessProbe:  livenessProbe,
 	}
 
 	pod := corev1.PodTemplateSpec{
