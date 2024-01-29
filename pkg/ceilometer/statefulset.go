@@ -77,68 +77,52 @@ func StatefulSet(
 	envVarsNotification["CONFIG_HASH"] = env.SetValue(configHash)
 
 	var replicas int32 = 1
+
 	allowPrivilegeEscalation := false
 	runAsNonRoot := true
+	securityContext := &corev1.SecurityContext{
+		AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+		Capabilities: &corev1.Capabilities{
+			Drop: []corev1.Capability{"ALL"},
+		},
+		RunAsNonRoot: &runAsNonRoot,
+		SeccompProfile: &corev1.SeccompProfile{
+			Type: "RuntimeDefault",
+		},
+	}
 
 	centralAgentContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:  args,
-		Image: instance.Spec.CentralImage,
-		Name:  "ceilometer-central-agent",
-		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsCentral),
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts: getVolumeMounts("ceilometer-central"),
+		Args:            args,
+		Image:           instance.Spec.CentralImage,
+		Name:            "ceilometer-central-agent",
+		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsCentral),
+		SecurityContext: securityContext,
+		VolumeMounts:    getVolumeMounts("ceilometer-central"),
 	}
 	notificationAgentContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:  args,
-		Image: instance.Spec.NotificationImage,
-		Name:  "ceilometer-notification-agent",
-		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsNotification),
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts: getVolumeMounts("ceilometer-notification"),
+		Args:            args,
+		Image:           instance.Spec.NotificationImage,
+		Name:            "ceilometer-notification-agent",
+		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsNotification),
+		SecurityContext: securityContext,
+		VolumeMounts:    getVolumeMounts("ceilometer-notification"),
 	}
 	sgCoreContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		Image:           instance.Spec.SgCoreImage,
 		Name:            "sg-core",
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts:   getSgCoreVolumeMounts(),
-		ReadinessProbe: readinessProbe,
-		LivenessProbe:  livenessProbe,
+		SecurityContext: securityContext,
+		VolumeMounts:    getSgCoreVolumeMounts(),
+		ReadinessProbe:  readinessProbe,
+		LivenessProbe:   livenessProbe,
 	}
 
 	pod := corev1.PodTemplateSpec{

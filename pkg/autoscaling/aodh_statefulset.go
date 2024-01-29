@@ -73,29 +73,31 @@ func AodhStatefulSet(
 	envVarsAodh["CONFIG_HASH"] = env.SetValue(configHash)
 
 	var replicas int32 = 1
+
 	allowPrivilegeEscalation := false
 	runAsNonRoot := true
+	securityContext := &corev1.SecurityContext{
+		AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+		Capabilities: &corev1.Capabilities{
+			Drop: []corev1.Capability{"ALL"},
+		},
+		RunAsNonRoot: &runAsNonRoot,
+		SeccompProfile: &corev1.SeccompProfile{
+			Type: "RuntimeDefault",
+		},
+	}
 
 	apiContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:  args,
-		Image: instance.Spec.Aodh.APIImage,
-		Name:  "aodh-api",
-		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts: getVolumeMounts("aodh-api"),
+		Args:            args,
+		Image:           instance.Spec.Aodh.APIImage,
+		Name:            "aodh-api",
+		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		SecurityContext: securityContext,
+		VolumeMounts:    getVolumeMounts("aodh-api"),
 	}
 
 	evaluatorContainer := corev1.Container{
@@ -103,21 +105,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:  args,
-		Image: instance.Spec.Aodh.EvaluatorImage,
-		Name:  "aodh-evaluator",
-		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts: getVolumeMounts("aodh-evaluator"),
+		Args:            args,
+		Image:           instance.Spec.Aodh.EvaluatorImage,
+		Name:            "aodh-evaluator",
+		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		SecurityContext: securityContext,
+		VolumeMounts:    getVolumeMounts("aodh-evaluator"),
 	}
 
 	notifierContainer := corev1.Container{
@@ -125,21 +118,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:  args,
-		Image: instance.Spec.Aodh.NotifierImage,
-		Name:  "aodh-notifier",
-		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts: getVolumeMounts("aodh-notifier"),
+		Args:            args,
+		Image:           instance.Spec.Aodh.NotifierImage,
+		Name:            "aodh-notifier",
+		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		SecurityContext: securityContext,
+		VolumeMounts:    getVolumeMounts("aodh-notifier"),
 	}
 
 	listenerContainer := corev1.Container{
@@ -147,21 +131,12 @@ func AodhStatefulSet(
 		Command: []string{
 			"/bin/bash",
 		},
-		Args:  args,
-		Image: instance.Spec.Aodh.ListenerImage,
-		Name:  "aodh-listener",
-		Env:   env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
-		SecurityContext: &corev1.SecurityContext{
-			AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-			Capabilities: &corev1.Capabilities{
-				Drop: []corev1.Capability{"ALL"},
-			},
-			RunAsNonRoot: &runAsNonRoot,
-			SeccompProfile: &corev1.SeccompProfile{
-				Type: "RuntimeDefault",
-			},
-		},
-		VolumeMounts: getVolumeMounts("aodh-listener"),
+		Args:            args,
+		Image:           instance.Spec.Aodh.ListenerImage,
+		Name:            "aodh-listener",
+		Env:             env.MergeEnvs([]corev1.EnvVar{}, envVarsAodh),
+		SecurityContext: securityContext,
+		VolumeMounts:    getVolumeMounts("aodh-listener"),
 	}
 
 	pod := corev1.PodTemplateSpec{
