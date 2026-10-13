@@ -25,22 +25,37 @@ import (
 )
 
 // Canonical dashboard names. These are the identifiers an administrator uses in
-// MetricStorage.spec.disabledDashboards to disable an individual dashboard, and
-// the names of the PersesDashboard objects created in the openstack namespace.
-// A name is defined here alongside its builder as each dashboard is converted to
-// Perses.
+// MetricStorage.spec.disabledDashboards to disable an individual dashboard
+// (e.g., "openstack-cloud", "openstack-node", "openstack-vm"), and the names of
+// the PersesDashboard objects created in the openstack namespace. A name is
+// defined here alongside its builder as each dashboard is converted to Perses.
 const (
-	OpenstackCloudName = "openstack-cloud"
+	OpenstackCeilometerIpmiName    = "openstack-ceilometer-ipmi"
+	OpenstackCloudName             = "openstack-cloud"
+	OpenstackLightspeedName        = "openstack-lightspeed"
+	OpenstackNetworkTrafficName    = "openstack-network-traffic"
+	OpenstackNodeName              = "openstack-node"
+	OpenstackOpenstackNetworkName  = "openstack-openstack-network"
+	OpenstackRabbitmqName          = "openstack-rabbitmq"
+	OpenstackVmName                = "openstack-vm"
 )
 
 // PersesDashboardBuilder builds a PersesDashboard object bound to the given
-// datasource, in the given namespace.
-type PersesDashboardBuilder func(datasourceName, namespace string) *persesv1alpha1.PersesDashboard
+// datasource, in the given namespace. Returns an error if the dashboard
+// definition cannot be constructed (e.g., unmarshal failure).
+type PersesDashboardBuilder func(datasourceName, namespace string) (*persesv1alpha1.PersesDashboard, error)
 
 // PersesDashboards returns the registry of PersesDashboard builders keyed by
 // canonical dashboard name.
 func PersesDashboards() map[string]PersesDashboardBuilder {
 	return map[string]PersesDashboardBuilder{
-		OpenstackCloudName: OpenstackCloudPerses,
+		OpenstackCeilometerIpmiName:   OpenstackCeilometerIpmiPerses,
+		OpenstackCloudName:            OpenstackCloudPerses,
+		OpenstackLightspeedName:       OpenstackLightspeedPerses,
+		OpenstackNetworkTrafficName:   OpenstackNetworkTrafficPerses,
+		OpenstackNodeName:             OpenstackNodePerses,
+		OpenstackOpenstackNetworkName: OpenstackOpenstackNetworkPerses,
+		OpenstackRabbitmqName:         OpenstackRabbitmqPerses,
+		OpenstackVmName:               OpenstackVmPerses,
 	}
 }
