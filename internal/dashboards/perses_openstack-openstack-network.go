@@ -42,7 +42,6 @@ const openstackOpenstackNetworkJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": "edpm-compute-0.ctlplane.example.com",
             "allowAllValue": false,
             "allowMultiple": true,
             "sort": "alphabetical-asc",

@@ -43,7 +43,6 @@ const openstackRabbitmqJSON = `{
               "name": "RabbitMQ Cluster",
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": false,
             "allowMultiple": false,
             "plugin": {
@@ -72,8 +71,7 @@ const openstackRabbitmqJSON = `{
               "spec": {
                 "calculation": "last",
                 "format": {
-                  "unit": "decimal",
-                  "decimalPlaces": 1
+                  "unit": "decimal"
                 }
               }
             },
@@ -104,8 +102,7 @@ const openstackRabbitmqJSON = `{
               "spec": {
                 "calculation": "last",
                 "format": {
-                  "unit": "decimal",
-                  "decimalPlaces": 1
+                  "unit": "decimal"
                 }
               }
             },
@@ -136,8 +133,7 @@ const openstackRabbitmqJSON = `{
               "spec": {
                 "calculation": "last",
                 "format": {
-                  "unit": "decimal",
-                  "decimalPlaces": 1
+                  "unit": "decimal"
                 }
               }
             },
@@ -168,8 +164,7 @@ const openstackRabbitmqJSON = `{
               "spec": {
                 "calculation": "last",
                 "format": {
-                  "unit": "decimal",
-                  "decimalPlaces": 1
+                  "unit": "decimal"
                 }
               }
             },
@@ -193,7 +188,7 @@ const openstackRabbitmqJSON = `{
           "spec": {
             "display": {
               "name": "Incoming messages / s",
-              "description": "Number of incomming messages per second"
+              "description": "Number of incoming messages per second"
             },
             "plugin": {
               "kind": "StatChart",
@@ -244,7 +239,7 @@ const openstackRabbitmqJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "sum(rate(rabbitmq_global_messages_redelivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_consume_auto_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_consume_manual_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_get_auto_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_get_manual_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"})"
+                      "query": "sum(rate(rabbitmq_global_messages_delivered_consume_auto_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_consume_manual_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_get_auto_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}) +sum(rate(rabbitmq_global_messages_delivered_get_manual_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"})"
                     }
                   }
                 }
@@ -264,8 +259,7 @@ const openstackRabbitmqJSON = `{
               "spec": {
                 "calculation": "last",
                 "format": {
-                  "unit": "decimal",
-                  "decimalPlaces": 1
+                  "unit": "decimal"
                 }
               }
             },
@@ -296,8 +290,7 @@ const openstackRabbitmqJSON = `{
               "spec": {
                 "calculation": "last",
                 "format": {
-                  "unit": "decimal",
-                  "decimalPlaces": 1
+                  "unit": "decimal"
                 }
               }
             },
@@ -370,7 +363,7 @@ const openstackRabbitmqJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "rabbitmq_disk_space_available_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}"
+                      "query": "(rabbitmq_disk_space_available_bytes - rabbitmq_disk_space_available_limit_bytes) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"$cluster\"}"
                     }
                   }
                 }

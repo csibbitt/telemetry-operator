@@ -42,7 +42,6 @@ const openstackCeilometerIpmiJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": false,
             "allowMultiple": false,
             "sort": "none",

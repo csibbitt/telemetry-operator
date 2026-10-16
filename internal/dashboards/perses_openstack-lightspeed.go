@@ -139,6 +139,20 @@ const openstackLightspeedJSON = `{
                 "calculation": "last",
                 "format": {
                   "unit": "decimal"
+                },
+                "thresholds": {
+                  "steps": [
+                    {
+                      "value": 0,
+                      "color": "green",
+                      "name": "OK"
+                    },
+                    {
+                      "value": 1,
+                      "color": "red",
+                      "name": "Degraded"
+                    }
+                  ]
                 }
               }
             },
@@ -172,7 +186,7 @@ const openstackLightspeedJSON = `{
                 },
                 "yAxis": {
                   "format": {
-                    "unit": "decimal"
+                    "unit": "seconds"
                   }
                 }
               }
@@ -196,7 +210,8 @@ const openstackLightspeedJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "histogram_quantile(0.90, sum(rate(ls_response_duration_seconds_bucket[5m])) by (le))"
+                      "query": "histogram_quantile(0.90, sum(rate(ls_response_duration_seconds_bucket[5m])) by (le))",
+                      "seriesNameFormat": "p90"
                     }
                   }
                 }
@@ -207,7 +222,8 @@ const openstackLightspeedJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "histogram_quantile(0.95, sum(rate(ls_response_duration_seconds_bucket[5m])) by (le))"
+                      "query": "histogram_quantile(0.95, sum(rate(ls_response_duration_seconds_bucket[5m])) by (le))",
+                      "seriesNameFormat": "p95"
                     }
                   }
                 }
@@ -218,7 +234,8 @@ const openstackLightspeedJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "histogram_quantile(0.99, sum(rate(ls_response_duration_seconds_bucket[5m])) by (le))"
+                      "query": "histogram_quantile(0.99, sum(rate(ls_response_duration_seconds_bucket[5m])) by (le))",
+                      "seriesNameFormat": "p99"
                     }
                   }
                 }
@@ -241,7 +258,7 @@ const openstackLightspeedJSON = `{
                 },
                 "yAxis": {
                   "format": {
-                    "unit": "decimal"
+                    "unit": "seconds"
                   }
                 }
               }
@@ -323,7 +340,8 @@ const openstackLightspeedJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "sum(rate(ls_llm_token_sent_total[5m]))"
+                      "query": "sum(rate(ls_llm_token_sent_total[5m]))",
+                      "seriesNameFormat": "sent"
                     }
                   }
                 }
@@ -334,7 +352,8 @@ const openstackLightspeedJSON = `{
                   "plugin": {
                     "kind": "PrometheusTimeSeriesQuery",
                     "spec": {
-                      "query": "sum(rate(ls_llm_token_received_total[5m]))"
+                      "query": "sum(rate(ls_llm_token_received_total[5m]))",
+                      "seriesNameFormat": "received"
                     }
                   }
                 }
@@ -446,7 +465,7 @@ const openstackLightspeedJSON = `{
               {
                 "x": 0,
                 "y": 8,
-                "width": 48,
+                "width": 24,
                 "height": 7,
                 "content": {
                   "$ref": "#/spec/panels/0_2"
@@ -455,7 +474,7 @@ const openstackLightspeedJSON = `{
               {
                 "x": 0,
                 "y": 15,
-                "width": 48,
+                "width": 24,
                 "height": 7,
                 "content": {
                   "$ref": "#/spec/panels/0_3"

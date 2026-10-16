@@ -42,7 +42,6 @@ const openstackNetworkTrafficJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": true,
             "allowMultiple": true,
             "customAllValue": ".*",
@@ -65,7 +64,6 @@ const openstackNetworkTrafficJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": true,
             "allowMultiple": true,
             "customAllValue": ".*",
@@ -88,7 +86,6 @@ const openstackNetworkTrafficJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": true,
             "allowMultiple": true,
             "customAllValue": ".*",
@@ -111,7 +108,6 @@ const openstackNetworkTrafficJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": true,
             "allowMultiple": true,
             "customAllValue": ".*",
@@ -134,7 +130,6 @@ const openstackNetworkTrafficJSON = `{
             "display": {
               "hidden": false
             },
-            "defaultValue": null,
             "allowAllValue": true,
             "allowMultiple": true,
             "customAllValue": ".*",
@@ -144,7 +139,7 @@ const openstackNetworkTrafficJSON = `{
               "spec": {
                 "labelName": "device",
                 "matchers": [
-                  "vm:ceilometer_network_outgoing_bytes:rate1m"
+                  "vm:ceilometer_network_outgoing_bytes:rate1m{vm_name=~\"$VM\"}"
                 ]
               }
             },
