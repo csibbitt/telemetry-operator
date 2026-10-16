@@ -157,7 +157,7 @@ const openstackCloudJSON = `{
           "kind": "Panel",
           "spec": {
             "display": {
-              "name": "Total Memory Saturation (Major Page Faults /sec)"
+              "name": "Total Memory Saturation (Major Page Faults)"
             },
             "plugin": {
               "kind": "TimeSeriesChart",
